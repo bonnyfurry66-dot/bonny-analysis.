@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071713">
+  <meta name="description" content="Bonny Analysis — multi-asset market intelligence dashboard.">
+  <title>Bonny Analysis | Institutional Market Intelligence</title>
+  <style>
+    :root{--bg:#07110f;--panel:#0d1b17;--panel2:#10231d;--line:#1d382e;--text:#e8f5ee;--muted:#91aa9d;--green:#39d69a;--blue:#5ca9ff;--purple:#a78bfa;--red:#ff6b78;--amber:#f4c66a;--radius:16px;--shadow:0 12px 34px #0005}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(1000px 500px at 85% -10%,#153b2d55,transparent 60%),var(--bg);color:var(--text);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    button,input,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}.app{min-height:100vh;display:grid;grid-template-columns:248px minmax(0,1fr)}
+    .sidebar{position:sticky;top:0;height:100vh;border-right:1px solid var(--line);background:#091612ed;padding:22px 14px;display:flex;flex-direction:column;gap:24px;z-index:5}
+    .brand{display:flex;align-items:center;gap:11px;padding:0 9px}.logo{width:39px;height:39px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#1b7955,#153c32);color:#a8ffda;font-size:21px;font-weight:900;box-shadow:0 7px 20px #0b9b6330}.brand strong{display:block;letter-spacing:.09em;font-size:14px}.brand small{color:var(--muted);font-size:9px;letter-spacing:.13em}
+    .nav-label{color:#668476;font-size:10px;font-weight:800;letter-spacing:.14em;padding:0 12px;margin-bottom:7px}.nav{display:grid;gap:4px}.nav button{border:0;background:transparent;color:#9eb5a9;text-align:left;padding:10px 12px;border-radius:10px;display:flex;gap:11px;align-items:center;transition:.18s}.nav button:hover,.nav button.active{background:#153328;color:#eafff4}.nav button.active{box-shadow:inset 2px 0 var(--green)}.nav .ico{width:18px;text-align:center;color:#7eb79c}.side-bottom{margin-top:auto;border:1px solid var(--line);background:#0d211a;border-radius:13px;padding:13px}.side-bottom p{margin:5px 0;color:var(--muted);font-size:11px}
+    .main{min-width:0;padding:24px clamp(16px,3vw,38px) 45px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}.eyebrow{color:var(--green);font-size:10px;font-weight:800;letter-spacing:.16em}.topbar h1{font-size:clamp(23px,3vw,32px);margin:4px 0 0;letter-spacing:-.04em}.top-actions{display:flex;align-items:center;gap:9px}.status{display:flex;align-items:center;gap:7px;color:#a8c3b5;font-size:11px;border:1px solid var(--line);border-radius:30px;padding:8px 11px}.dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px #f4c66a18}.btn{border:1px solid var(--line);border-radius:10px;padding:9px 13px;background:#10231d;color:var(--text);font-weight:650}.btn.primary{background:var(--green);border-color:var(--green);color:#062016}.btn:hover{filter:brightness(1.12)}.mobile-menu{display:none}
+    .notice{border:1px solid #705c2a;background:#241e10;color:#e9d49b;padding:10px 13px;border-radius:11px;font-size:11px;margin-bottom:18px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:25px 0 13px}.section-head h2{font-size:16px;margin:0;letter-spacing:-.02em}.section-head p{color:var(--muted);font-size:11px;margin:3px 0 0}.muted{color:var(--muted)}
+    .grid{display:grid;gap:13px}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:linear-gradient(150deg,#10231d,#0b1915);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);min-width:0}.stat{padding:16px}.stat .label{color:var(--muted);font-size:11px}.stat .value{font-size:24px;font-weight:750;letter-spacing:-.04em;margin:8px 0 2px}.stat .sub{font-size:10px;color:#88a99a}
+    .content-grid{grid-template-columns:minmax(0,1.65fr) minmax(260px,.85fr)}.chart-card{padding:16px}.card-title{display:flex;align-items:center;justify-content:space-between;gap:10px}.card-title h3{font-size:14px;margin:0}.pill{border:1px solid var(--line);border-radius:30px;padding:5px 9px;color:var(--muted);font-size:10px}.chart-toolbar{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 8px}.chart-toolbar button{background:#0b1915;border:1px solid var(--line);color:var(--muted);padding:5px 9px;border-radius:7px;font-size:10px}.chart-toolbar button.active{background:#16412f;color:#c5ffe2;border-color:#286d4d}.chart-wrap{height:260px;position:relative}.chart-wrap canvas{width:100%;height:100%;display:block}.chart-foot{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin-top:7px}
+    .watchlist{padding:15px}.watch-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:11px 0;border-bottom:1px solid #1a3028}.watch-row:last-child{border:0}.watch-row strong{font-size:12px}.watch-row small{display:block;color:var(--muted);font-size:10px}.change{font-size:11px;font-weight:700}.up{color:var(--green)}.down{color:var(--red)}
+    .asset-tools{display:flex;gap:9px;flex-wrap:wrap}.asset-tools input,.asset-tools select{background:#0c1b16;border:1px solid var(--line);border-radius:9px;color:var(--text);padding:9px 11px;outline:none}.asset-tools input{min-width:190px;flex:1}.asset-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.asset-card{padding:14px;transition:.2s;cursor:pointer}.asset-card:hover{transform:translateY(-2px);border-color:#34785a}.asset-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.symbol{font-weight:800;font-size:13px}.category{font-size:9px;color:#9ab5a6;background:#183126;padding:4px 7px;border-radius:30px}.asset-name{font-size:10px;color:var(--muted);margin-top:2px}.asset-price{font-size:19px;font-weight:750;margin:12px 0 1px}.asset-change{font-size:10px}.asset-bottom{border-top:1px solid #1a3028;margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;color:var(--muted);font-size:10px}
+    .lower-grid{grid-template-columns:1.1fr .9fr}.scanner,.matrix{padding:16px}.scan-row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #1a3028}.scan-row:last-child{border:0}.scan-row strong{font-size:12px}.scan-row small{display:block;color:var(--muted);font-size:10px}.score{font-weight:800;color:var(--amber)}.no-trade{font-size:10px;color:#e8c87e;border:1px solid #62512b;border-radius:20px;padding:4px 8px}.matrix-row{margin-top:15px}.matrix-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px}.bar{height:7px;border-radius:20px;background:#1b3028;overflow:hidden}.bar span{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,#1c9466,#5ce6ac)}
+    .footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);color:#708c7d;font-size:10px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .modal-backdrop{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.modal-backdrop.open{display:flex}.modal{width:min(520px,100%);background:#0d1d17;border:1px solid #2a4b3b;border-radius:18px;padding:20px;box-shadow:0 25px 80px #0009}.modal h2{margin:0 0 5px}.modal p{color:var(--muted);font-size:12px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+    @media(max-width:1050px){.stats{grid-template-columns:repeat(2,1fr)}.asset-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:760px){.app{display:block}.sidebar{position:fixed;left:-270px;width:248px;transition:left .22s;box-shadow:var(--shadow)}.sidebar.open{left:0}.mobile-menu{display:inline-flex}.main{padding:17px 13px 32px}.topbar{align-items:flex-start}.top-actions .status{display:none}.content-grid,.lower-grid{grid-template-columns:1fr}.asset-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.chart-wrap{height:220px}.topbar h1{font-size:23px}}
+    @media(max-width:390px){.asset-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stat .value{font-size:20px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="logo">B</div><div><strong>BONNY ANALYSIS</strong><small>INSTITUTIONAL INTELLIGENCE</small></div></div>
+    <div>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="nav" id="mainNav">
+        <button class="active" data-target="overview"><span class="ico">◫</span>Global Dashboard</button>
+        <button data-target="markets"><span class="ico">◈</span>Asset Explorer</button>
+        <button data-target="charts"><span class="ico">▥</span>Live Charts</button>
+        <button data-target="scanner"><span class="ico">⌕</span>Strong Entry Scanner</button>
+        <button data-target="intelligence"><span class="ico">✧</span>AI Intelligence</button>
+      </nav>
+    </div>
+    <div>
+      <div class="nav-label">MARKET INTELLIGENCE</div>
+      <nav class="nav">
+        <button data-filter="Metals"><span class="ico">◇</span>Metals</button>
+        <button data-filter="Forex"><span class="ico">⇄</span>Forex</button>
+        <button data-filter="Stocks"><span class="ico">▤</span>Stocks</button>
+        <button data-filter="Crypto"><span class="ico">₿</span>Crypto</button>
+        <button data-filter="Indices"><span class="ico">⌁</span>Indices</button>
+        <button data-filter="Commodities"><span class="ico">◉</span>Commodities</button>
+        <button data-filter="Bonds"><span class="ico">▥</span>Bonds & Rates</button>
+        <button data-filter="ETFs"><span class="ico">▦</span>ETFs</button>
+      </nav>
+    </div>
+    <div class="side-bottom"><strong style="font-size:11px">Data connection</strong><p>This standalone preview uses illustrative data. Connect trusted providers through a secure backend for live prices.</p><span class="pill">Backend not connected</span></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar" id="overview">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <button class="btn mobile-menu" id="menuBtn" aria-label="Open menu">☰</button>
+        <div><div class="eyebrow">GLOBAL MARKET INTELLIGENCE</div><h1>Market Command Center</h1><div class="muted" style="font-size:11px;margin-top:3px">A multi-asset view of the markets that move capital.</div></div>
+      </div>
+      <div class="top-actions"><div class="status"><span class="dot"></span> DEMO DATA · NOT LIVE</div><button class="btn" id="refreshBtn">↻ Refresh view</button></div>
+    </header>
+
+    <div class="notice"><strong>Important:</strong> This is a frontend starter. Prices, changes, scanner scores and charts below are illustrative demo values, not live quotes or trading recommendations. Live feeds and AI analysis require backend integrations.</div>
+
+    <section class="grid stats" aria-label="Market overview">
+      <div class="card stat"><div class="label">Markets tracked in preview</div><div class="value" id="marketCount">24</div><div class="sub">Across 8 asset classes</div></div>
+      <div class="card stat"><div class="label">Featured instruments</div><div class="value">03</div><div class="sub">XAUUSD · USDJPY · US30</div></div>
+      <div class="card stat"><div class="label">Analysis refresh target</div><div class="value">15 min</div><div class="sub">Requires scheduled backend job</div></div>
+      <div class="card stat"><div class="label">Strong-entry rule</div><div class="value">8 / 10</div><div class="sub">Unverified conditions never count</div></div>
+    </section>
+
+    <section id="charts">
+      <div class="section-head"><div><h2>Market pulse</h2><p>Illustrative price path for the selected instrument</p></div><span class="pill">SAMPLE CHART</span></div>
+      <div class="grid content-grid">
+        <div class="card chart-card">
+          <div class="card-title"><div><h3 id="chartSymbol">XAUUSD · Gold</h3><div class="muted" style="font-size:10px">Synthetic preview series · no executable prices</div></div><span class="pill" id="chartCategory">METALS</span></div>
+          <div class="chart-toolbar" id="timeframes"><button class="active" data-tf="1D">1D</button><button data-tf="5D">5D</button><button data-tf="1M">1M</button><button data-tf="3M">3M</button><button data-tf="1Y">1Y</button></div>
+          <div class="chart-wrap"><canvas id="priceChart" aria-label="Illustrative market chart"></canvas></div>
+          <div class="chart-foot"><span>● Demo price series</span><span id="chartFoot">Selected: XAUUSD</span></div>
+        </div>
+        <div class="card watchlist">
+          <div class="card-title"><h3>Featured watchlist</h3><span class="pill">CORE 3</span></div>
+          <div id="watchlist"></div>
+          <div style="margin-top:10px"><button class="btn" style="width:100%" data-scroll="markets">Explore all markets →</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="markets">
+      <div class="section-head"><div><h2>Multi-asset universe</h2><p>Browse instruments across global markets</p></div><span class="pill" id="assetCount">24 instruments</span></div>
+      <div class="asset-tools"><input id="searchInput" type="search" placeholder="Search symbol or instrument…" aria-label="Search markets"><select id="categorySelect" aria-label="Filter category"><option value="All">All asset classes</option><option>Metals</option><option>Forex</option><option>Stocks</option><option>Crypto</option><option>Indices</option><option>Commodities</option><option>Bonds</option><option>ETFs</option></select></div>
+      <div class="grid asset-grid" id="assetGrid" style="margin-top:13px"></div>
+    </section>
+
+    <section class="grid lower-grid" id="scanner" style="margin-top:27px">
+      <div class="card scanner">
+        <div class="card-title"><div><h3>Strong Entry Scanner</h3><div class="muted" style="font-size:10px">Strict institutional confirmation gate</div></div><span class="pill">8/10 REQUIRED</span></div>
+        <div id="scannerRows"></div>
+        <div class="muted" style="font-size:10px;margin-top:10px">No trade is proposed from demo data. A real scanner must verify all inputs before scoring.</div>
+      </div>
+      <div class="card matrix" id="intelligence">
+        <div class="card-title"><div><h3>Institutional analysis framework</h3><div class="muted" style="font-size:10px">Three independent review desks</div></div><span class="pill">MODEL DESIGN</span></div>
+        <div class="matrix-row"><div class="matrix-label"><span>Macro analyst</span><span class="muted">News · rates · yields</span></div><div class="bar"><span style="width:100%"></span></div></div>
+        <div class="matrix-row"><div class="matrix-label"><span>Technical analyst</span><span class="muted">ICT · SMC · Wyckoff</span></div><div class="bar"><span style="width:100%"></span></div></div>
+        <div class="matrix-row"><div class="matrix-label"><span>Risk manager</span><span class="muted">Exposure · invalidation</span></div><div class="bar"><span style="width:100%"></span></div></div>
+        <div class="notice" style="margin:17px 0 0">Framework shown; no analyst has run on live data yet. Connect data and AI services before relying on any output.</div>
+      </div>
+    </section>
+
+    <footer class="footer"><span>© <span id="year"></span> Bonny Analysis · Institutional Market Intelligence</span><span>Built for research, analysis and disciplined risk management.</span></footer>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="assetModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal"><div class="card-title"><h2 id="modalTitle">Instrument</h2><button class="btn" id="closeModal" aria-label="Close">✕</button></div><p id="modalDescription"></p><div class="grid" style="grid-template-columns:1fr 1fr;gap:10px;margin-top:15px"><div class="card stat"><div class="label">Preview price</div><div class="value" style="font-size:19px" id="modalPrice">—</div></div><div class="card stat"><div class="label">Preview change</div><div class="value" style="font-size:19px" id="modalChange">—</div></div></div><p>Live analysis, timeframe structure, liquidity levels and entry validation will appear here after the backend and market-data feeds are connected.</p><div class="modal-actions"><button class="btn primary" id="selectAsset">View on chart</button></div></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const assets = [
+    {s:"XAUUSD",n:"Gold / US Dollar",c:"Metals",p:"2,650.00",v:"+0.42%",up:true},
+    {s:"XAGUSD",n:"Silver / US Dollar",c:"Metals",p:"31.250",v:"+0.28%",up:true},
+    {s:"XPTUSD",n:"Platinum / US Dollar",c:"Metals",p:"980.00",v:"-0.16%",up:false},
+    {s:"XPDUSD",n:"Palladium / US Dollar",c:"Metals",p:"1,020.00",v:"+0.11%",up:true},
+    {s:"EURUSD",n:"Euro / US Dollar",c:"Forex",p:"1.08500",v:"+0.13%",up:true},
+    {s:"GBPUSD",n:"British Pound / US Dollar",c:"Forex",p:"1.27000",v:"-0.08%",up:false},
+    {s:"USDJPY",n:"US Dollar / Japanese Yen",c:"Forex",p:"150.250",v:"+0.21%",up:true},
+    {s:"AUDUSD",n:"Australian Dollar / US Dollar",c:"Forex",p:"0.65200",v:"-0.12%",up:false},
+    {s:"USDCAD",n:"US Dollar / Canadian Dollar",c:"Forex",p:"1.36500",v:"+0.09%",up:true},
+    {s:"GBPJPY",n:"British Pound / Japanese Yen",c:"Forex",p:"190.800",v:"+0.18%",up:true},
+    {s:"AAPL",n:"Apple Inc.",c:"Stocks",p:"225.00",v:"+0.35%",up:true},
+    {s:"NVDA",n:"NVIDIA Corporation",c:"Stocks",p:"140.00",v:"+1.12%",up:true},
+    {s:"TSLA",n:"Tesla Inc.",c:"Stocks",p:"350.00",v:"-0.64%",up:false},
+    {s:"MSFT",n:"Microsoft Corporation",c:"Stocks",p:"425.00",v:"+0.22%",up:true},
+    {s:"BTCUSD",n:"Bitcoin / US Dollar",c:"Crypto",p:"98,500.00",v:"+1.80%",up:true},
+    {s:"ETHUSD",n:"Ethereum / US Dollar",c:"Crypto",p:"3,450.00",v:"+0.92%",up:true},
+    {s:"SOLUSD",n:"Solana / US Dollar",c:"Crypto",p:"210.00",v:"-0.31%",up:false},
+    {s:"XRPUSD",n:"XRP / US Dollar",c:"Crypto",p:"2.35",v:"+0.54%",up:true},
+    {s:"US30",n:"Dow Jones Industrial Average",c:"Indices",p:"43,200.00",v:"+0.25%",up:true},
+    {s:"NAS100",n:"Nasdaq 100",c:"Indices",p:"21,300.00",v:"+0.47%",up:true},
+    {s:"SPX500",n:"S&P 500",c:"Indices",p:"5,950.00",v:"+0.19%",up:true},
+    {s:"GER40",n:"DAX 40",c:"Indices",p:"20,100.00",v:"-0.10%",up:false},
+    {s:"USOIL",n:"WTI Crude Oil",c:"Commodities",p:"70.50",v:"-0.22%",up:false},
+    {s:"NATGAS",n:"Natural Gas",c:"Commodities",p:"3.20",v:"+0.66%",up:true},
+    {s:"US10Y",n:"US 10-Year Treasury Yield",c:"Bonds",p:"4.25%",v:"+0.02%",up:true},
+    {s:"US2Y",n:"US 2-Year Treasury Yield",c:"Bonds",p:"4.05%",v:"-0.01%",up:false},
+    {s:"SPY",n:"SPDR S&P 500 ETF",c:"ETFs",p:"595.00",v:"+0.20%",up:true},
+    {s:"GLD",n:"SPDR Gold Shares",c:"ETFs",p:"245.00",v:"+0.39%",up:true}
+  ];
+  let selected = assets[0], activeFilter = "All", timeframe = "1D";
+  const $ = id => document.getElementById(id);
+  const escapeHtml = value => String(value).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  function renderAssets(){
+    const query = $("searchInput").value.trim().toLowerCase();
+    const category = $("categorySelect").value;
+    const filtered = assets.filter(a => (category==="All" || a.c===category) && (activeFilter==="All" || a.c===activeFilter) && (a.s.toLowerCase().includes(query)||a.n.toLowerCase().includes(query)));
+    $("assetCount").textContent = filtered.length + " instruments";
+    $("assetGrid").innerHTML = filtered.map(a => `<article class="card asset-card" data-symbol="${escapeHtml(a.s)}" tabindex="0" role="button" aria-label="Open ${escapeHtml(a.s)}"><div class="asset-top"><span class="symbol">${escapeHtml(a.s)}</span><span class="category">${escapeHtml(a.c)}</span></div><div class="asset-name">${escapeHtml(a.n)}</div><div class="asset-price">${escapeHtml(a.p)}</div><div class="asset-change ${a.up?"up":"down"}">${escapeHtml(a.v)} <span class="muted">demo</span></div><div class="asset-bottom"><span>Open instrument</span><span>↗</span></div></article>`).join("");
+    $("assetGrid").querySelectorAll("[data-symbol]").forEach(el => {
+      const open = () => showAsset(assets.find(a=>a.s===el.dataset.symbol));
+      el.addEventListener("click",open);el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}});
+    });
+  }
+  function renderWatchlist(){
+    $("watchlist").innerHTML = ["XAUUSD","USDJPY","US30"].map(sym=>{
+      const a=assets.find(x=>x.s===sym);
+      return `<div class="watch-row"><div><strong>${a.s}</strong><small>${a.n}</small></div><div style="text-align:right"><strong>${a.p}</strong><small class="${a.up?"up":"down"}">${a.v}</small></div></div>`;
+    }).join("");
+  }
+  function renderScanner(){
+    $("scannerRows").innerHTML = ["XAUUSD","USDJPY","US30","BTCUSD","NVDA"].map(sym=>{
+      const a=assets.find(x=>x.s===sym);
+      return `<div class="scan-row"><div><strong>${a.s}</strong><small>${a.c} · awaiting verified data</small></div><span class="score">— / 10</span><span class="no-trade">NO TRADE</span></div>`;
+    }).join("");
+  }
+  function drawChart(){
+    const canvas=$("priceChart"), rect=canvas.getBoundingClientRect(), dpr=Math.max(1,window.devicePixelRatio||1);
+    if(!rect.width||!rect.height)return;
+    canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(rect.height*dpr);
+    const ctx=canvas.getContext("2d");ctx.scale(dpr,dpr);
+    const w=rect.width,h=rect.height,pad={l:8,r:54,t:12,b:22},cw=w-pad.l-pad.r,ch=h-pad.t-pad.b;
+    ctx.clearRect(0,0,w,h);
+    ctx.font="10px system-ui";ctx.strokeStyle="#1b352b";ctx.fillStyle="#789587";ctx.lineWidth=1;
+    for(let i=0;i<=4;i++){const y=pad.t+ch*i/4;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();ctx.fillText(["HIGH","MID","MID","MID","LOW"][i],w-pad.r+7,y+3);}
+    let seed=selected.s.split("").reduce((n,c)=>n+c.charCodeAt(0),0)+timeframe.length*17;
+    const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
+    const vals=[];let val=.48;
+    for(let i=0;i<75;i++){val=Math.max(.12,Math.min(.88,val+(rand()-.48)*.12));vals.push(val);}
+    const points=vals.map((v,i)=>({x:pad.l+cw*i/(vals.length-1),y:pad.t+ch*(1-v)}));
+    const gradient=ctx.createLinearGradient(0,pad.t,0,h-pad.b);gradient.addColorStop(0,"#36d99a44");gradient.addColorStop(1,"#36d99a00");
+    ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.lineTo(points[points.length-1].x,h-pad.b);ctx.lineTo(points[0].x,h-pad.b);ctx.closePath();ctx.fillStyle=gradient;ctx.fill();
+    ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.strokeStyle="#45dba2";ctx.lineWidth=2;ctx.stroke();
+    const last=points[points.length-1];ctx.beginPath();ctx.arc(last.x,last.y,3.5,0,Math.PI*2);ctx.fillStyle="#a8ffda";ctx.fill();
+    ctx.fillStyle="#77998a";ctx.fillText("Illustrative movement",pad.l,h-5);
+  }
+  function updateChart(){
+    $("chartSymbol").textContent=selected.s+" · "+selected.n;
+    $("chartCategory").textContent=selected.c.toUpperCase();
+    $("chartFoot").textContent="Selected: "+selected.s+" · "+timeframe;
+    drawChart();
+  }
+  function showAsset(asset){
+    if(!asset)return;selected=asset;
+    $("modalTitle").textContent=asset.s;
+    $("modalDescription").textContent=asset.n+" · "+asset.c+". All displayed values are illustrative preview data.";
+    $("modalPrice").textContent=asset.p;
+    $("modalChange").textContent=asset.v;
+    $("modalChange").style.color=asset.up?"var(--green)":"var(--red)";
+    $("assetModal").classList.add("open");
+  }
+  function setFilter(filter){
+    activeFilter=filter;$("categorySelect").value=filter;
+    document.querySelectorAll("#mainNav button").forEach(b=>b.classList.toggle("active",b.dataset.filter===filter));
+    renderAssets();$("markets").scrollIntoView({behavior:"smooth"});
+    $("sidebar").classList.remove("open");
+  }
+  $("searchInput").addEventListener("input",renderAssets);
+  $("categorySelect").addEventListener("change",()=>{activeFilter="All";renderAssets();});
+  document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>setFilter(b.dataset.filter)));
+  document.querySelectorAll("#mainNav [data-target]").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll("#mainNav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+    $(b.dataset.target).scrollIntoView({behavior:"smooth"});$("sidebar").classList.remove("open");
+  }));
+  document.querySelectorAll("[data-scroll]").forEach(b=>b.addEventListener("click",()=>$ (b.dataset.scroll).scrollIntoView({behavior:"smooth"})));
+  $("timeframes").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    timeframe=b.dataset.tf;$("timeframes").querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));updateChart();
+  }));
+  $("closeModal").addEventListener("click",()=>$("assetModal").classList.remove("open"));
+  $("assetModal").addEventListener("click",e=>{if(e.target===$("assetModal"))$("assetModal").classList.remove("open");});
+  $("selectAsset").addEventListener("click",()=>{$("assetModal").classList.remove("open");updateChart();$("charts").scrollIntoView({behavior:"smooth"});});
+  $("menuBtn").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
+  $("refreshBtn").addEventListener("click",()=>{renderAssets();renderWatchlist();renderScanner();updateChart();});
+  $("year").textContent=new Date().getFullYear();
+  $("marketCount").textContent=assets.length;
+  renderAssets();renderWatchlist();renderScanner();updateChart();
+  window.addEventListener("resize",drawChart);
+})();
+</script>
+</body>
+</html>
